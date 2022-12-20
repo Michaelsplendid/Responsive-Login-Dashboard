@@ -1,0 +1,303 @@
+@import "https://unpkg.com/normalize.css" layer(normalize);
+@import "https://unpkg.com/open-props/open-props.min.css" layer(open-props);
+@import "https://unpkg.com/open-props/normalize.min.css" layer(open-props);
+
+:root {
+  --anchor-size: 5vmin;
+  --anchored-size: 25vmin;
+}
+
+*,
+*:after,
+*:before {
+  box-sizing: border-box;
+}
+
+body {
+  display: grid;
+  place-items: center;
+  min-height: 100vh;
+  font-family: 'Google Sans', sans-serif, system-ui;
+  background: var(--gray-2);
+  position: relative;
+  overflow: hidden;
+}
+
+main {
+  height: 100vh;
+  width: 100vw;
+  display: grid;
+  place-items: center;
+  transition: all 0.2s ease;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+form {
+  padding: var(--size-4) var(--size-9);
+  background: var(--surface-1);
+  display: grid;
+  gap: var(--size-5);
+  border: 2px solid var(--surface-3);
+  box-shadow: var(--shadow-5);
+  position: relative;
+  z-index: 2;
+}
+
+label {
+  font-weight: var(--font-weight-9);
+  color: var(--text-2);
+}
+
+#email {
+  anchor-name: --email;
+}
+
+#password {
+  anchor-name: --password;
+}
+
+.form-group {
+  display: grid;
+  gap: var(--size-1);
+}
+
+.material-symbols-outlined {
+  font-variation-settings: 'wght' 600;
+}
+
+form {
+  anchor-name: --form;
+  --anchor-name: --email;
+}
+
+form:has(#email:focus) {
+  --anchor-name: --email;
+}
+
+form:has(#password:focus, #reveal:focus, [type=submit]:focus) {
+  --anchor-name: --password;
+}
+
+
+[type] {
+  padding: var(--size-2) var(--size-4);
+  max-width: 220px;
+}
+
+[type]:focus-visible {
+  outline-color: var(--cyan-6);
+}
+
+[type=button] {
+  width: 44px;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  background: transparent;
+  padding: 0;
+  position: absolute;
+  translate: 0 -50%;
+  top: anchor(--password center);
+  right: anchor(--password right);
+}
+
+main {
+  position: relative;
+}
+
+.bear__wrapper {
+  position: absolute;
+  width: 240px;
+  aspect-ratio: 1;
+  bottom: anchor(--form top);
+  right: anchor(--form right);
+  translate: calc(var(--show-valid, 0) * -20%) 50%;
+  transition: translate var(--step) var(--step);
+}
+
+:is([type=password], [type=text]) {
+  padding-right: 44px;
+}
+
+[type=submit] {
+  background-color: var(--cyan-6);
+  font-weight: var(--font-weight-9);
+  color: var(--gray-0);
+  padding: var(--size-2) var(--size-4);
+}
+
+:root {
+  --step: 0.1s;
+}
+:root:has(form:focus-within) {
+  --show-paw: 1;
+}
+form:focus-within .indicator-arm__claws {
+  transition: translate var(--step) var(--step);
+}
+form:focus-within .indicator-arm__paw {
+  transition: translate var(--step);
+}
+
+/* Arm stuff */
+.indicator-arm {
+  overflow: visible;
+  width: 96px;
+  position: absolute;
+  left: 100%;
+  top: anchor(var(--anchor-name) center);
+  translate: -60% -50%;
+  z-index: 2;
+}
+.indicator-arm__claws {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+  translate: calc((110 - (var(--show-paw, 0) * 110)) * 1%) 0;
+  transition: translate var(--step);
+}
+.indicator-arm__paw {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+  translate: calc((-50 + (var(--show-paw, 0) * 50)) * 1%) 0;
+  transition: translate var(--step) var(--step);
+}
+.bear {
+  overflow: visible;
+  width: 100%;
+}
+.bear__arm {
+  transform-box: fill-box;
+  transform-origin: 5% 50%;
+  translate: calc((-12 + (var(--reveal, 0) * -16)) * 1%) calc((50 - (var(--password-focus, 0) * 62)) * 1%);
+  rotate: calc(var(--password-focus, 0) * -12deg);
+  transition: translate var(--step), rotate var(--step);
+}
+
+.bear__eyes-normal {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+  animation: blink 6s -2s infinite;
+}
+
+@keyframes blink {
+  0%, 46%, 48%, 50%, 100% {
+    scale: 1 1;
+  }
+  47%, 49% {
+    scale: 1 0.01;
+  }
+}
+
+:root:has(#password:focus, #reveal:focus) .bear__arm {
+  transition: translate var(--step) var(--step), rotate var(--step) var(--step);
+}
+
+:root:has(form:hover) {
+  --show-bear: 0.45;
+}
+:root:has(form:valid:hover) {
+  --show-bear: 0.55;
+}
+:root:has([type=text]) {
+  --reveal: 1;
+}
+:root:has(form:focus-within) {
+  --show-bear: 0.55;
+}
+:root:has(#password:focus, #reveal:focus) {
+  --password-focus: 1;
+}
+
+:root:has(#email:invalid:not(:placeholder-shown):not(:focus)):has(#password:not(:focus)):has(#reveal:not(:focus)) {
+  --show-cross: 1;
+}
+
+:root:has(#email:invalid:not(:placeholder-shown):not(:focus)):has(#password:not(:focus)):has(#reveal:not(:focus)) .bear__body {
+  animation: shake calc(var(--show-cross, 0) * 0.2s) both;
+}
+
+:root:has(#email:valid:not(:placeholder-shown):not(:focus)):has(#password:valid:not(:placeholder-shown):not(:focus)):has(#reveal:not(:focus)) {
+  --show-paw: 0;
+  --show-valid: 1;
+}
+
+:root:has(#email:valid:not(:placeholder-shown):not(:focus)):has(#password:valid:not(:placeholder-shown):not(:focus)):has(#reveal:not(:focus))
+.indicator-arm__claws {
+  transition: translate var(--step);
+}
+:root:has(#email:valid:not(:placeholder-shown):not(:focus)):has(#password:valid:not(:placeholder-shown):not(:focus)):has(#reveal:not(:focus))
+.indicator-arm__paw {
+  transition: translate var(--step) var(--step);
+}
+
+:root:has(#email:valid:not(:placeholder-shown):not(:focus)):has(#password:valid:not(:placeholder-shown):not(:focus)):has(#reveal:not(:focus))
+.bear__arms {
+  display: block;
+  transition: opacity var(--step) var(--step) steps(1);
+}
+
+.bear__body {
+  transform-box: fill-box;
+  transform-origin: 100% 50%;
+}
+
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  } 
+  20%, 40%, 60%, 80% {
+    transform: translateX(-2%);
+  }
+  10%, 30%, 50%, 70%, 90% {
+    transform: translateX(2%);
+  }
+}
+
+.bear__eyes-normal {
+  opacity: calc(1 - var(--show-cross, 0));
+}
+
+.bear__eyes-crossed {
+  opacity: var(--show-cross, 0);
+}
+
+.bear {
+  transition: transform var(--step);
+  transform:
+    translateY(calc((50 - (var(--show-bear, 0) * 100)) * 1%))
+    rotate(calc(var(--password-focus, 0) * -15deg))
+    translate(calc(var(--password-focus, 0) * -5%), calc(var(--password-focus, 0) * 5%));
+}
+
+.bear__arms {
+  display: none;
+  transform-box: fill-box;
+  transform-origin: 50%;
+  opacity: var(--show-valid, 0);
+  animation: pump 0.25s 4 both;
+  translate: 0 60%;
+}
+
+@keyframes pump {
+  50% {
+    translate: 0 -20%;
+  }
+}
+
+/* Debugging purposes */
+/* :root {
+  --show-paw: 0;
+  --show-valid: 1;
+  --show-bear: 0.55;
+} */
